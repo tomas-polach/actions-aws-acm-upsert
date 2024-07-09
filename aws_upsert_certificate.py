@@ -209,5 +209,7 @@ if __name__ == "__main__":
     )
     cert_arn = m.get_or_create_ssl_cert(domains)
 
-    # return github action outputs
-    print(f"::set-output name=certificate-arn::{cert_arn}")
+    # return github action outputs:
+    # Write the output to the GITHUB_OUTPUT environment file
+    with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
+        print(f"certificate-arn={cert_arn}", file=f)
