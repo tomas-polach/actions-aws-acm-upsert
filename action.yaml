@@ -23,12 +23,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Set GitHub Path
-      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
-      shell: bash
-      env:
-        GITHUB_ACTION_PATH: ${{ github.action_path }}
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -37,7 +31,7 @@ runs:
     - run: pip install boto3 -q
       shell: bash
 
-    - run: python aws_upsert_certificate.py
+    - run: python ${{ github.action_path }}//aws_upsert_certificate.py
       shell: bash
       env:
         DOMAINS: ${{ inputs.domains }}
