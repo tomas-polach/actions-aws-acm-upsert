@@ -29,12 +29,14 @@ runs:
         python-version: '3.11'
 
     - name: Install boto3
+      shell: bash
       run: pip install boto3
 
     - name: Retrieve a certificate or create one if it doesn't exist yet
+      shell: bash
       run: python aws_upsert_certificate.py
       env:
-        DOMAIN: ${{ inputs.domain }}
-        DOMAIN_ROLE_ARN: ${{ inputs.domain-role-arn }}
-        CERTIFICATE_REGION: ${{ inputs.certificate-region }}
-        CERTIFICATE_ROLE_ARN: ${{ inputs.certificate-role-arn }}
+        DOMAINS: ${{ inputs.domains }}
+        DOMAIN_ROLE_ARN: ${{ inputs['domain-role-arn'] }}
+        CERTIFICATE_REGION: ${{ inputs['certificate-region'] }}
+        CERTIFICATE_ROLE_ARN: ${{ inputs['certificate-role-arn'] }}
