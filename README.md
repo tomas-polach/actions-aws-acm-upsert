@@ -29,8 +29,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # optional: use certificate arn in later steps (example bash script)
-    - name: Use certificate arn
-        run: |
-        echo "Certificate ARN: ${{ steps.retrieve-certificate.outputs.certificate-arn }}"
+      # optional: use certificate arn in later steps
+    - run: |
+      echo "Certificate ARN: ${{ steps.retrieve-certificate.outputs.certificate-arn }}"
 ```
