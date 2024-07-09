@@ -30,11 +30,11 @@ runs:
 
     - name: Install boto3
       shell: bash
-      run: pip install boto3
+      run: pip install boto3 -q
 
     - name: Retrieve a certificate or create one if it doesn't exist yet
       shell: bash
-      run: python aws_upsert_certificate.py
+      run: python ./aws_upsert_certificate.py
       env:
         DOMAINS: ${{ inputs.domains }}
         DOMAIN_ROLE_ARN: ${{ inputs['domain-role-arn'] }}
