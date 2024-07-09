@@ -24,17 +24,15 @@ runs:
   using: "composite"
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
-    - name: Install boto3
+    - run: pip install boto3 -q
       shell: bash
-      run: pip install boto3 -q
 
-    - name: Retrieve a certificate or create one if it doesn't exist yet
+    - run: python aws_upsert_certificate.py
       shell: bash
-      run: python ./aws_upsert_certificate.py
       env:
         DOMAINS: ${{ inputs.domains }}
         DOMAIN_ROLE_ARN: ${{ inputs['domain-role-arn'] }}
