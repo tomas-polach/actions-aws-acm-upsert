@@ -1,0 +1,40 @@
+name: "Upsert Certificate"
+description: "A custom action to create or retrieve the certificate for a domain"
+author: "Tomas Polach"
+
+inputs:
+  domains:
+    description: "A list of comma separated domains for the certificate. Example: 'example.com,www.example.com,*.example2.com'"
+    required: true
+  domain-role-arn:
+    description: "The ARN of the IAM role to assume for creating the verification DNS record"
+    required: false
+  certificate-region:
+    description: "The region in which the certificate will be created"
+    required: true
+  certificate-role-arn:
+    description: "The ARN of the IAM role to assume for creating the certificate"
+    required: false
+
+outputs:
+  certificate-arn:
+    description: "The ARN of the upserted certificate"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install boto3
+      run: pip install boto3
+
+    - name: Retrieve a certificate or create one if it doesn't exist yet
+      run: python aws_upsert_certificate.py
+      env:
+        DOMAIN: ${{ inputs.domain }}
+        DOMAIN_ROLE_ARN: ${{ inputs.domain-role-arn }}
+        CERTIFICATE_REGION: ${{ inputs.certificate-region }}
+        CERTIFICATE_ROLE_ARN: ${{ inputs.certificate-role-arn }}

@@ -1,0 +1,24 @@
+# add typicall .gitignore items for python
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# osx
+.DS_Store
+
+# pycharm
+.idea/
+
+# virtualenv
+venv/
+
+# jupyter notebook
+.ipynb_checkpoints/
+
+# ipython
+.ipython/
+
+# vscode
+.vscode/
