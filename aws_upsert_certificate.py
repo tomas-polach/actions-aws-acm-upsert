@@ -204,8 +204,8 @@ if __name__ == "__main__":
 
     m = DNSAndSSLCertManager(
         certificate_region=certificate_region,
-        certificate_role_arn=certificate_role_arn,
-        domain_role_arn=domain_role_arn,
+        certificate_role_arn=certificate_role_arn if certificate_role_arn != '' else None,
+        domain_role_arn=domain_role_arn if domain_role_arn != '' else None,
     )
     cert_arn = m.get_or_create_ssl_cert(domains)
 
