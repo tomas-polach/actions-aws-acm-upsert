@@ -19,6 +19,7 @@ inputs:
 outputs:
   certificate-arn:
     description: "The ARN of the upserted certificate"
+    value: ${{ steps.script.outputs.certificate-arn }}
 
 runs:
   using: "composite"
@@ -32,6 +33,7 @@ runs:
       shell: bash
 
     - run: python ${{ github.action_path }}//aws_upsert_certificate.py
+      id: script
       shell: bash
       env:
         DOMAINS: ${{ inputs.domains }}
