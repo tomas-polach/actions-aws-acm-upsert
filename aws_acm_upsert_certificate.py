@@ -3,7 +3,7 @@ from time import sleep
 import boto3
 
 
-class DNSAndSSLCertManager:
+class AwsAcmCertManager:
     def __init__(
             self,
             certificate_region: str,
@@ -79,7 +79,7 @@ class DNSAndSSLCertManager:
     @staticmethod
     def _check_if_domains_are_in_cert(domains: list[str], cert_domains: list[str]) -> bool:
         for source in domains:
-            if not any(DNSAndSSLCertManager._match_domain(source, target) for target in cert_domains):
+            if not any(AwsAcmCertManager._match_domain(source, target) for target in cert_domains):
                 return False
         return True
 
@@ -91,7 +91,7 @@ class DNSAndSSLCertManager:
             for cert in page['CertificateSummaryList']:
                 cert_details = self.acm_client.describe_certificate(CertificateArn=cert['CertificateArn'])
                 cert_domains = cert_details['Certificate']['SubjectAlternativeNames']
-                if DNSAndSSLCertManager._check_if_domains_are_in_cert(domains, cert_domains):
+                if AwsAcmCertManager._check_if_domains_are_in_cert(domains, cert_domains):
                     print(f"Found existing certificate: {cert['CertificateArn']}")
                     cert_arn = cert['CertificateArn']
                     break
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     certificate_role_arn = os.getenv('CERTIFICATE_ROLE_ARN')
     certificate_region = os.getenv('AWS_DEFAULT_REGION')
 
-    m = DNSAndSSLCertManager(
+    m = AwsAcmCertManager(
         certificate_region=certificate_region,
         certificate_role_arn=certificate_role_arn if certificate_role_arn != '' else None,
         domain_role_arn=domain_role_arn if domain_role_arn != '' else None,

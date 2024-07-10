@@ -1,4 +1,4 @@
-name: "Upsert Certificate"
+name: "Upsert AWS Certificate"
 description: "A custom action to create or retrieve the certificate for a domain"
 author: "Tomas Polach"
 
@@ -29,7 +29,7 @@ runs:
     - run: pip install boto3 -q
       shell: bash
 
-    - run: python ${{ github.action_path }}/aws_upsert_certificate.py
+    - run: python ${{ github.action_path }}/aws_acm_upsert_certificate.py
       id: script
       shell: bash
       env:
