@@ -9,9 +9,6 @@ inputs:
   domain-role-arn:
     description: "The ARN of the IAM role to assume for creating the verification DNS record"
     required: false
-  certificate-region:
-    description: "The region in which the certificate will be created"
-    required: true
   certificate-role-arn:
     description: "The ARN of the IAM role to assume for creating the certificate"
     required: false
@@ -38,5 +35,4 @@ runs:
       env:
         DOMAINS: ${{ inputs.domains }}
         DOMAIN_ROLE_ARN: ${{ inputs['domain-role-arn'] }}
-        CERTIFICATE_REGION: ${{ inputs['certificate-region'] }}
         CERTIFICATE_ROLE_ARN: ${{ inputs['certificate-role-arn'] }}

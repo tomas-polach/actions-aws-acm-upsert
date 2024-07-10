@@ -196,11 +196,15 @@ class DNSAndSSLCertManager:
 
 
 if __name__ == "__main__":
+    # check if AWS_DEFAULT_REGION env var is set
+    if os.getenv('AWS_DEFAULT_REGION') is None:
+        raise Exception("Error: AWS_DEFAULT_REGION env var is not set.")
+
     # retrieve inputs
     domains = os.getenv('DOMAINS').split(',')
     domain_role_arn = os.getenv('DOMAIN_ROLE_ARN')
-    certificate_region = os.getenv('CERTIFICATE_REGION')
     certificate_role_arn = os.getenv('CERTIFICATE_ROLE_ARN')
+    certificate_region = os.getenv('AWS_DEFAULT_REGION')
 
     m = DNSAndSSLCertManager(
         certificate_region=certificate_region,
