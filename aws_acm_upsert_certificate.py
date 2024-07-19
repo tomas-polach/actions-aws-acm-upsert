@@ -91,7 +91,12 @@ class AwsAcmCertManager:
             for cert in page['CertificateSummaryList']:
                 cert_details = self.acm_client.describe_certificate(CertificateArn=cert['CertificateArn'])
                 cert_domains = cert_details['Certificate']['SubjectAlternativeNames']
-                if AwsAcmCertManager._check_if_domains_are_in_cert(domains, cert_domains):
+                if (
+                    # is same region
+                    cert_details['Certificate']['Region'] == self.acm_client.meta.region_name
+                    # and matches domains
+                    and AwsAcmCertManager._check_if_domains_are_in_cert(domains, cert_domains)
+                ):
                     print(f"Found existing certificate: {cert['CertificateArn']}")
                     cert_arn = cert['CertificateArn']
                     break
