@@ -108,7 +108,7 @@ class AwsAcmCertManager:
                     and AwsAcmCertManager._check_if_domains_are_in_cert(domains, _cert_domains)
                 ):
                     print(f"Found existing certificate: {_cert_arn}")
-                    cert_arn = _cert_status
+                    cert_arn = _cert_arn
                     cert_status = _cert_status
                     break
 
