@@ -87,26 +87,35 @@ class AwsAcmCertManager:
         # List all certificates
         paginator = self.acm_client.get_paginator('list_certificates')
         cert_arn = None
+        cert_status = None
         for page in paginator.paginate(CertificateStatuses=['PENDING_VALIDATION', 'ISSUED']):
-            for cert in page['CertificateSummaryList']:
-                cert_details = self.acm_client.describe_certificate(CertificateArn=cert['CertificateArn'])
-                cert_domains = cert_details['Certificate']['SubjectAlternativeNames']
+            for _cert in page['CertificateSummaryList']:
+                _cert_arn = _cert['CertificateArn']
+                _cert_status = _cert['Status']
+                _cert_region = _cert_arn.split(':')[3]
+                # cert_details = self.acm_client.describe_certificate(CertificateArn=cert['CertificateArn'])
+                # cert_domains = cert_details['Certificate']['SubjectAlternativeNames']
+                _cert_domains = [*_cert['SubjectAlternativeNameSummaries'], _cert['DomainName']]
+                print('cert_region:', _cert_region)
+                print('cert_domains:', _cert_domains)
                 if (
                     # is same region
-                    cert_details['Certificate']['Region'] == self.acm_client.meta.region_name
+                    _cert_region == self.acm_client.meta.region_name
+                    # and is not expired
+                    #'PENDING_VALIDATION'|'ISSUED'|'INACTIVE'|'EXPIRED'|'VALIDATION_TIMED_OUT'|'REVOKED'|'FAILED',
+                    and _cert_status in ['ISSUED', 'PENDING_VALIDATION']
                     # and matches domains
-                    and AwsAcmCertManager._check_if_domains_are_in_cert(domains, cert_domains)
+                    and AwsAcmCertManager._check_if_domains_are_in_cert(domains, _cert_domains)
                 ):
-                    print(f"Found existing certificate: {cert['CertificateArn']}")
-                    cert_arn = cert['CertificateArn']
+                    print(f"Found existing certificate: {_cert_arn}")
+                    cert_arn = _cert_status
+                    cert_status = _cert_status
                     break
 
-        if cert_arn is not None:
-            # check if the certificate is already validated
-            cert_details = self.acm_client.describe_certificate(CertificateArn=cert_arn)
-            if cert_details['Certificate']['Status'] == 'ISSUED':
-                print(f"Certificate is already validated: All good.")
-                return cert_arn
+        # check if the certificate is already validated
+        if cert_status == 'ISSUED':
+            print(f"Certificate is already issued: All good.")
+            return cert_arn
 
         if cert_arn is None:
             # If no suitable certificate found, create a new one
