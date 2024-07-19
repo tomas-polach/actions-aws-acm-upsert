@@ -95,7 +95,7 @@ class AwsAcmCertManager:
                 _cert_region = _cert_arn.split(':')[3]
                 # cert_details = self.acm_client.describe_certificate(CertificateArn=cert['CertificateArn'])
                 # cert_domains = cert_details['Certificate']['SubjectAlternativeNames']
-                _cert_domains = [*_cert['SubjectAlternativeNameSummaries'], _cert['DomainName']]
+                _cert_domains = list({_cert['DomainName']} | set(_cert['SubjectAlternativeNameSummaries']))
                 print('cert_region:', _cert_region)
                 print('cert_domains:', _cert_domains)
                 if (
